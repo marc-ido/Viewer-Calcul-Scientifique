@@ -186,7 +186,12 @@ static void buildSubdivision(float a, float b, int N, int M, float h) {
     const float RA=0.10f, GA=0.30f, BA=0.75f;
     const float RB=0.25f, GB=0.55f, BB=0.95f;
 
-    if (cells <= 50000LL) {
+    // Flat fills: cheap (2 tris/cell), allow up to 1M cells (~1000x1000)
+    // Pyramids (h>0): 9x heavier geometry, cap at 300x300 = 90000 cells
+    const long long FLAT_CAP = 1000000LL;
+    const long long PYRA_CAP = 90000LL;
+
+    if ((h <= 0.f && cells <= FLAT_CAP) || (h > 0.f && cells <= PYRA_CAP)) {
         if (h <= 0.f) {
             std::vector<float> tris;
             tris.reserve((size_t)(cells*2*3*6));
@@ -253,7 +258,7 @@ static void buildSubdivision(float a, float b, int N, int M, float h) {
         float y=-b+(float)j*dy;
         lines.insert(lines.end(),{-a,y,0.f,WR,WG,WB}); lines.insert(lines.end(),{a,y,0.f,WR,WG,WB});
     }
-    if (cells <= 200000LL) {
+    if (cells <= 1000000LL) {
         for (int j=0; j<M; j++) {
             float y0=-b+(float)j*dy, y1=y0+dy;
             for (int i=0; i<N; i++) {

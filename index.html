@@ -3,9 +3,33 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Calcul Scientifique — Projet EDP 2D - Marc I. Romain B.</title>
+  <title>Calcul Scientifique — Projet EDP 2D — Marc I. Romain B. </title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ── Toast popup ───────────────────────────────── */
+    #toast {
+      position: fixed;
+      bottom: 36px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #1e2a38;
+      border: 1px solid #ffaa33;
+      color: #ffaa33;
+      font-size: 0.78rem;
+      padding: 10px 18px;
+      border-radius: 8px;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.5);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      z-index: 9999;
+      white-space: nowrap;
+    }
+    #toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
 
     body {
       background: #0d0d18;
@@ -531,13 +555,14 @@
           onload="renderMathInElement(document.getElementById('description'),{delimiters:[{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}]})"></script>
 </head>
 <body>
+  <div id="toast"></div>
 
   <div id="loading">
     <div class="spinner"></div>
     <span>Loading WebAssembly&hellip;</span>
   </div>
 
-  <h1>Calcul Scientifique &mdash; Projet EDP 2D &mdash; (Marc I. Romain B.)</h1>
+  <h1>Calcul Scientifique &mdash; Projet EDP 2D &mdash; Marc I. Romain B.</h1>
 
   <div id="scene-row">
 
@@ -553,7 +578,7 @@
       <div class="ctrl-title">Maillage (Triangulation)</div>
 
       <div class="ctrl-section">
-        <div class="ctrl-section-label">Domaine d'étude</div>
+        <div class="ctrl-section-label">Domaine d'etude </div>
         <div class="ctrl-row">
           <label>a</label>
           <input type="number" id="inp-a" min="0" max="5" step="0.25" value="2">
@@ -573,12 +598,12 @@
         <div class="ctrl-row">
           <label>N</label>
           <input type="number" id="inp-n" min="1" max="10000" step="1" value="6">
-          <span class="ctrl-hint">Abscisses (X)</span>
+          <span class="ctrl-hint">abscisses (X)</span>
         </div>
         <div class="ctrl-row">
           <label>M</label>
           <input type="number" id="inp-m" min="1" max="10000" step="1" value="6">
-          <span class="ctrl-hint">Ordonnées (Y)</span>
+          <span class="ctrl-hint">ordonnées (Y)</span>
         </div>
       </div>
 
@@ -592,7 +617,7 @@
           <span class="ctrl-hint">hauteur des fonctions barycentriques</span>
         </div>
         <div style="font-size:0.60rem;color:#2a4858;line-height:1.4">
-          h=0 &rarr; triangles &nbsp;&middot;&nbsp; h&gt;0 &rarr; &phi;&#8320;&phi;&#8321;&phi;&#8322; fonctions barycentriques
+          h=0 &rarr; vide &nbsp;&middot;&nbsp; h&gt;0 &rarr; &phi;&#8320;&phi;&#8321;&phi;&#8322; afficher les fonctions de base
         </div>
       </div>
 
@@ -600,11 +625,11 @@
         <button id="btn-apply">Afficher Maillage</button>
         <button id="btn-clear">Réinitialiser</button>
       </div>
-      <div id="ctrl-info">Choisir les valeurs et cliquer sur "Afficher Maillage"</div>
+      <div id="ctrl-info">Entrer les valeurs et cliquer sur "Afficher Maillage".</div>
 
       <!-- PDE Solver -->
       <div class="ctrl-divider"></div>
-      <div class="pde-section-title">Calcul EDP</div>
+      <div class="pde-section-title">Solveur EDP</div>
 
       <div class="ctrl-section">
         <div class="ctrl-section-label">&minus;div(&eta;&nabla;u) + &lambda;u = f</div>
@@ -624,7 +649,7 @@
         <div class="ctrl-row">
           <label>&lambda;</label>
           <input type="number" id="inp-lambda" min="0" step="0.1" value="1">
-          <span class="ctrl-hint">(reaction)</span>
+          <span class="ctrl-hint">reaction</span>
         </div>
 
         <div class="ctrl-section-label" style="margin-top:2px">Conditions aux bords</div>
@@ -634,10 +659,10 @@
         </div>
 
         <div class="expr-note">
-          Exemples d'entrées : <b>pi</b>, <b>sqrt(x)</b>, <b>log(y)</b>, <b>exp(x)</b>,<br>
+          Exemple d'entrées : <b>pi</b>, <b>sqrt(x)</b>, <b>log(y)</b>, <b>exp(x)</b>,<br>
           <b>sin(x)</b>, <b>cos(x)</b>, <b>abs(x)</b>, <b>pow(x,2)</b>&hellip;<br>
           Or full JS: <b>Math.sin(x)*Math.exp(-y*y)</b><br>
-          Les réels a, b, N, M définis comme ci-dessus
+          Les valeurs a, b, N, M restent définies comme ci-dessus.
         </div>
       </div>
 
@@ -646,7 +671,7 @@
         <button id="btn-clearpde">Réinitialiser</button>
       </div>
 
-      <div id="pde-status">Définir f, &eta;, &lambda; et cliquer sur "Calcul EDP"</div>
+      <div id="pde-status">Définir f, &eta;, &lambda; et cliquer sur "Calcul EDP".</div>
 
       <div style="margin-top:2px">
         <div class="colorbar"></div>
@@ -654,7 +679,7 @@
       </div>
 
       <div class="ctrl-divider"></div>
-      <button id="btn-viewcode" onclick="openCodeModal()">&#128196; Voir code source C++/Web Assembly</button>
+      <button id="btn-viewcode" onclick="openCodeModal()">&#128196; Voir code source C++ </button>
     </div><!-- #controls -->
 
   </div><!-- #scene-row -->
@@ -884,6 +909,17 @@
 
         var info = document.getElementById('ctrl-info');
 
+        var _toastTimer = null;
+        function showToast(msg, color) {
+          var t = document.getElementById('toast');
+          t.textContent = msg;
+          t.style.borderColor = color || '#ffaa33';
+          t.style.color = color || '#ffaa33';
+          t.classList.add('show');
+          if (_toastTimer) clearTimeout(_toastTimer);
+          _toastTimer = setTimeout(function() { t.classList.remove('show'); }, 3500);
+        }
+
         function clamp(v, lo, hi) { return Math.min(hi, Math.max(lo, v)); }
 
         // ── Subdivision panel ──────────────────────────────────────────────
@@ -913,11 +949,18 @@
           var surfMode = h > 0
             ? '<span style="color:#80d090">barycentric</span> (h='+h+')'
             : '<span style="color:#4a90c8">flat fill</span>';
+          var warnMsg = '';
+          if (h > 0 && totalRects > 62500 && totalRects <= 90000) {
+            warnMsg = '<br><span style="color:#ffaa33">⚠️ N×M &gt; 250×250 — rendu lourd, performances réduites.</span>';
+          } else if (h > 0 && totalRects > 90000) {
+            warnMsg = '<br><span style="color:#ff5555">⛔ Pyramides désactivées au-dessus de 300×300 (N×M &gt; 90 000).</span>';
+          }
           info.innerHTML =
             '<b style="color:#4a90c8">'+totalRects.toLocaleString()+'</b> rects'
             +' / <b style="color:#6080b0">'+(2*totalRects).toLocaleString()+'</b> tris<br>'
             +'Cell: '+cellW+' \u00d7 '+cellH+'<br>'
-            +'Surface: '+surfMode;
+            +'Surface: '+surfMode
+            + warnMsg;
         });
 
         document.getElementById('btn-clear').addEventListener('click', function () {
@@ -938,12 +981,13 @@
           var dirichlet = (_bcMode === 'dirichlet') ? 1 : 0;
 
           a = clamp(a, 0.01, 5);  b = clamp(b, 0.01, 5);
-          N = clamp(N, 1, 200);   M = clamp(M, 1, 200);
+          N = clamp(N, 1, 10000); M = clamp(M, 1, 10000);
 
-          if (N * M > 2500) {
-            document.getElementById('pde-status').innerHTML =
-              '<span style="color:#e08040">\u26a0 N\u00d7M = '+(N*M).toLocaleString()+
-              '<br>May be slow. Consider N,M \u2264 50.</span>';
+          var totalCells = N * M;
+          if (totalCells > 250000) {
+            showToast('⚠️ Très grand maillage — risque de gel du navigateur', '#ff5555');
+          } else if (totalCells > 90000) {
+            showToast('⚠️ Grand maillage — le solveur peut être lent');
           }
 
           // Convert plain math notation -> JavaScript Math.*
